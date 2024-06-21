@@ -1,18 +1,19 @@
 import { ZodError, ZodIssue } from 'zod';
-import { TErrorResponse, TErrorSources } from '../interface/error';
+import { TErrorResponse, TErrorMessages } from '../interface/error';
+import httpStatus from 'http-status';
 
 const handleZodError = (err: ZodError): TErrorResponse => {
-    const errorSources: TErrorSources = err.issues.map((issue: ZodIssue) => {
+    const errorMessages: TErrorMessages = err.issues.map((issue: ZodIssue) => {
         return {
             path: issue?.path[issue.path.length - 1],
             message: issue.message,
         };
     });
-    const statusCode = 400;
+    const statusCode = httpStatus.BAD_REQUEST;
     return {
         statusCode,
         message: 'Validation error',
-        errorSources,
+        errorMessages,
     };
 };
 

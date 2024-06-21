@@ -23,7 +23,7 @@ const carSchema = new Schema<ICar>(
         status: {
             type: String,
             enum: carStatus,
-            required: [true, 'Status number is required'],
+            default: 'available',
         },
         features: {
             type: [String],

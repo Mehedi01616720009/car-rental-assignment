@@ -9,32 +9,39 @@ const createCarValidationSchema = z.object({
         description: z.string({
             required_error: 'Description is required',
         }),
-        color: z.enum([...carStatus] as [string, ...string[]], {
-            required_error: 'Role is required',
+        color: z.string({
+            required_error: 'Color is required',
         }),
-        password: z.string({
-            required_error: 'Password is required',
+        isElectric: z.boolean({
+            required_error: 'isElectric is required',
         }),
-        phone: z.string({
-            required_error: 'Phone is required',
-        }),
-        address: z.string({
-            required_error: 'Address is required',
+        status: z
+            .enum([...carStatus] as [string, ...string[]])
+            .default('available'),
+        features: z.array(
+            z.string({
+                required_error: 'Features is required',
+            }),
+        ),
+        pricePerHour: z.number({
+            required_error: 'Price Per Hour is required',
         }),
     }),
 });
 
-// const userSignInValidationSchema = z.object({
-//     body: z.object({
-//         email: z.string({
-//             required_error: 'Email is required',
-//         }),
-//         password: z.string({
-//             required_error: 'Password is required',
-//         }),
-//     }),
-// });
+const updateCarValidationSchema = z.object({
+    body: z.object({
+        name: z.string().optional(),
+        description: z.string().optional(),
+        color: z.string().optional(),
+        isElectric: z.boolean().optional(),
+        status: z.enum([...carStatus] as [string, ...string[]]).optional(),
+        features: z.array(z.string()).optional(),
+        pricePerHour: z.number().optional(),
+    }),
+});
 
-export const carValidations = {
+export const CarValidations = {
     createCarValidationSchema,
+    updateCarValidationSchema,
 };

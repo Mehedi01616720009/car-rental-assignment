@@ -26,3 +26,19 @@ async function main() {
 }
 
 main();
+
+process.on('unhandledRejection', () => {
+    console.log({ message: '--| Unhandled Rejection Detected |--' });
+
+    if (server) {
+        server.close(() => {
+            process.exit(1);
+        });
+    }
+    process.exit(1);
+});
+
+process.on('uncaughtException', () => {
+    console.log({ message: '--| Uncaught Exception Detected |--' });
+    process.exit(1);
+});
