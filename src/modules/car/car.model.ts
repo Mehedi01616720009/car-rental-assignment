@@ -1,6 +1,8 @@
 import { Schema, model } from 'mongoose';
 import { ICar } from './car.interface';
 import { carStatus } from './car.constant';
+import AppError from '../../errors/AppError';
+import httpStatus from 'http-status';
 
 const carSchema = new Schema<ICar>(
     {
@@ -42,5 +44,15 @@ const carSchema = new Schema<ICar>(
         timestamps: true,
     },
 );
+
+carSchema.pre('findOneAndUpdate', async function (next) {
+    const query = this.getQuery();
+    const isCarExist = await Car.findOne(query);
+    if (!isCarExist) {
+        throw new AppError(httpStatus.NOT_FOUND, 'This id is invalid');
+    }
+
+    next();
+});
 
 export const Car = model<ICar>('Car', carSchema);

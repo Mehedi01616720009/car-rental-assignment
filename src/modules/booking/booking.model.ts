@@ -3,30 +3,28 @@ import { IBooking } from './booking.interface';
 
 const bookingSchema = new Schema<IBooking>(
     {
-        name: {
+        date: {
             type: String,
-            required: [true, 'Name is required'],
+            required: [true, 'Date is required'],
         },
-        email: {
-            type: String,
-            required: [true, 'Email is required'],
+        user: {
+            type: Schema.Types.ObjectId,
         },
-        role: {
-            type: String,
-            enum: ['admin', 'user'],
-            required: [true, 'Role is required'],
+        car: {
+            type: Schema.Types.ObjectId,
+            required: [true, 'Car is required'],
         },
-        password: {
+        startTime: {
             type: String,
-            required: [true, 'Password is required'],
+            required: [true, 'Start Time is required'],
         },
-        phone: {
+        endTime: {
             type: String,
-            required: [true, 'Phone number is required'],
+            default: null,
         },
-        address: {
-            type: String,
-            required: [true, 'Address is required'],
+        totalCost: {
+            type: Number,
+            default: 0,
         },
     },
     {

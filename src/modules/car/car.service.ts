@@ -21,10 +21,6 @@ const updateCarIntoDB = async (id: string, payload: Partial<ICar>) => {
         new: true,
         runValidators: true,
     });
-
-    // if (features && features.length > 0) {
-    //     const deletedFeatures =
-    // }
     return result;
 };
 

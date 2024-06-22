@@ -34,7 +34,7 @@ const userSignInValidationSchema = z.object({
     }),
 });
 
-export const userValidations = {
+export const UserValidations = {
     userSignUpValidationSchema,
     userSignInValidationSchema,
 };
