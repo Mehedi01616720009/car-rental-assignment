@@ -5,7 +5,7 @@ const bookingSetValidationSchema = z.object({
         date: z.string({
             required_error: 'Date is required',
         }),
-        car: z.string({
+        carId: z.string({
             required_error: 'Car is required',
         }),
         startTime: z.string({

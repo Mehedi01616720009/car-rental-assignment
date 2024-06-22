@@ -6,7 +6,8 @@ import httpStatus from 'http-status';
 import config from '../../config';
 
 const signUpUserIntoDB = async (payload: IUser) => {
-    const result = await User.create(payload);
+    const createdData = await User.create(payload);
+    const result = await User.findById(createdData._id);
     return result;
 };
 
