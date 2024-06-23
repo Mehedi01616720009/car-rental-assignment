@@ -15,14 +15,14 @@ router.post(
     BookingController.createBooking,
 );
 
+// all bookings get route for only admin
+router.get('/', auth(USER_ROLE.admin), BookingController.getAllBookings);
+
 // my bookings get route for only user
 router.get(
     '/my-bookings',
     auth(USER_ROLE.user),
     BookingController.getMyBooking,
 );
-
-// all bookings get route for only admin
-router.get('/', auth(USER_ROLE.admin), BookingController.getAllBookings);
 
 export const BookingRoutes = router;

@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import { ICar } from './car.interface';
+import { ICar, ICarModel } from './car.interface';
 import { carStatus } from './car.constant';
 import AppError from '../../errors/AppError';
 import httpStatus from 'http-status';
@@ -55,4 +55,11 @@ carSchema.pre('findOneAndUpdate', async function (next) {
     next();
 });
 
-export const Car = model<ICar>('Car', carSchema);
+carSchema.statics.isCarAvailable = async function (id: string) {
+    return await Car.findOne({
+        _id: id,
+        status: 'available',
+    }).select('status');
+};
+
+export const Car = model<ICar, ICarModel>('Car', carSchema);

@@ -4,6 +4,7 @@ import validateRequest from '../../middlewares/validateRequest';
 import { CarValidations } from './car.validation';
 import auth from '../../middlewares/auth';
 import { USER_ROLE } from '../user/user.constant';
+import { BookingValidations } from '../booking/booking.validation';
 
 const router = express.Router();
 
@@ -35,5 +36,13 @@ router.patch(
 
 // single car soft delete route
 router.delete('/:id', auth(USER_ROLE.admin), CarController.deleteCar);
+
+// return car from user route for only admin
+router.put(
+    '/return',
+    auth(USER_ROLE.admin),
+    validateRequest(BookingValidations.bookingEndValidationSchema),
+    CarController.returnCar,
+);
 
 export const CarRoutes = router;

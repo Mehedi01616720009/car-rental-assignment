@@ -7,6 +7,7 @@ import httpStatus from 'http-status';
 import { Car } from '../car/car.model';
 import { bookingSearchableFields } from './booking.constant';
 import QueryBuilder from '../../builder/QueryBuilder';
+import { Types } from 'mongoose';
 
 const createBookingIntoDB = async (
     userData: JwtPayload,
@@ -18,15 +19,25 @@ const createBookingIntoDB = async (
     }
 
     payload.user = user._id;
+
+    const isCarAvailable = await Car.isCarAvailable(
+        payload.car as Types.ObjectId,
+    );
+
+    if (!isCarAvailable) {
+        throw new AppError(httpStatus.NOT_FOUND, 'Car is not available  ');
+    }
+
     const createdData = await Booking.create(payload);
-    const result = await Booking.findById(createdData._id)
-        .populate('user')
-        .populate('car');
 
     // update car availability
     await Car.findByIdAndUpdate(payload.car, {
         status: 'unavailable',
     });
+
+    const result = await Booking.findById(createdData._id)
+        .populate('user')
+        .populate('car');
 
     return result;
 };
@@ -61,23 +72,6 @@ const getMyBookingsFromDB = async (userData: JwtPayload) => {
         .populate('car');
     return result;
 };
-
-// const updateCarIntoDB = async (id: string, payload: Partial<ICar>) => {
-//     const result = await Car.findByIdAndUpdate(id, payload, {
-//         new: true,
-//         runValidators: true,
-//     });
-//     return result;
-// };
-
-// const deleteCarFromDB = async (id: string) => {
-//     const result = await Car.findByIdAndUpdate(
-//         id,
-//         { isDeleted: true },
-//         { new: true },
-//     );
-//     return result;
-// };
 
 export const BookingServices = {
     createBookingIntoDB,
