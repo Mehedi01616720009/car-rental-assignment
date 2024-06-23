@@ -7,39 +7,55 @@ import httpStatus from 'http-status';
 import { Car } from '../car/car.model';
 import { bookingSearchableFields } from './booking.constant';
 import QueryBuilder from '../../builder/QueryBuilder';
-import { Types } from 'mongoose';
+import mongoose, { Types } from 'mongoose';
 
 const createBookingIntoDB = async (
     userData: JwtPayload,
     payload: Partial<IBooking>,
 ) => {
-    const user = await User.findById(userData.userId);
-    if (!user) {
-        throw new AppError(httpStatus.NOT_FOUND, 'User invalid');
+    const session = await mongoose.startSession();
+
+    try {
+        session.startTransaction();
+
+        const user = await User.findById(userData.userId);
+        if (!user) {
+            throw new AppError(httpStatus.NOT_FOUND, 'User invalid');
+        }
+
+        payload.user = user._id;
+
+        const isCarAvailable = await Car.isCarAvailable(
+            payload.car as Types.ObjectId,
+        );
+
+        if (!isCarAvailable) {
+            throw new AppError(httpStatus.NOT_FOUND, 'Car is not available  ');
+        }
+
+        const createdData = await Booking.create([payload], { session });
+
+        // update car availability
+        await Car.findByIdAndUpdate(
+            payload.car,
+            {
+                status: 'unavailable',
+            },
+            { session },
+        );
+
+        const result = await Booking.findById(createdData[0]._id)
+            .populate('user')
+            .populate('car');
+
+        await session.commitTransaction();
+        await session.endSession();
+
+        return result;
+    } catch (err) {
+        await session.abortTransaction();
+        await session.endSession();
     }
-
-    payload.user = user._id;
-
-    const isCarAvailable = await Car.isCarAvailable(
-        payload.car as Types.ObjectId,
-    );
-
-    if (!isCarAvailable) {
-        throw new AppError(httpStatus.NOT_FOUND, 'Car is not available  ');
-    }
-
-    const createdData = await Booking.create(payload);
-
-    // update car availability
-    await Car.findByIdAndUpdate(payload.car, {
-        status: 'unavailable',
-    });
-
-    const result = await Booking.findById(createdData._id)
-        .populate('user')
-        .populate('car');
-
-    return result;
 };
 
 const getAllBookingsFromDB = async (query: Record<string, unknown>) => {
@@ -67,6 +83,7 @@ const getMyBookingsFromDB = async (userData: JwtPayload) => {
     if (!user) {
         throw new AppError(httpStatus.NOT_FOUND, 'User invalid');
     }
+
     const result = await Booking.find({ user: user._id })
         .populate('user')
         .populate('car');

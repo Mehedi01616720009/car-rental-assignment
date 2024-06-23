@@ -1,6 +1,9 @@
+import mongoose from 'mongoose';
 import { Booking } from '../booking/booking.model';
 import { ICar } from './car.interface';
 import { Car } from './car.model';
+import AppError from '../../errors/AppError';
+import httpStatus from 'http-status';
 
 const createCarIntoDB = async (payload: ICar) => {
     const result = await Car.create(payload);
@@ -38,38 +41,56 @@ const returnCarFromUserIntoDB = async (payload: {
     bookingId: string;
     endTime: string;
 }) => {
-    const fetchBooking = await Booking.findByIdAndUpdate(
-        payload.bookingId,
-        { endTime: payload.endTime },
-        { new: true },
-    );
+    const session = await mongoose.startSession();
 
-    const startTime = fetchBooking?.startTime.split(':')[0];
-    const endTime = fetchBooking?.endTime.split(':')[0];
+    try {
+        session.startTransaction();
+        const updateEndTime = await Booking.findByIdAndUpdate(
+            payload.bookingId,
+            { endTime: payload.endTime },
+            { new: true, session },
+        );
 
-    const hourDifference = Number(endTime) - Number(startTime);
+        if (!updateEndTime) {
+            throw new AppError(
+                httpStatus.BAD_REQUEST,
+                'Failed to update end time',
+            );
+        }
 
-    // update car availability
-    const car = await Car.findByIdAndUpdate(
-        fetchBooking?.car?._id,
-        {
-            status: 'available',
-        },
-        { new: true },
-    );
+        const startTime = updateEndTime?.startTime.split(':')[0];
+        const endTime = updateEndTime?.endTime.split(':')[0];
 
-    const pricePerHour = car?.pricePerHour;
-    const totalCost = Number(pricePerHour) * hourDifference;
+        const hourDifference = Number(endTime) - Number(startTime);
 
-    const result = await Booking.findByIdAndUpdate(
-        payload.bookingId,
-        { totalCost },
-        { new: true },
-    )
-        .populate('user')
-        .populate('car');
+        // update car availability
+        const car = await Car.findByIdAndUpdate(
+            updateEndTime?.car?._id,
+            {
+                status: 'available',
+            },
+            { new: true, session },
+        );
 
-    return result;
+        const pricePerHour = car?.pricePerHour;
+        const totalCost = Number(pricePerHour) * hourDifference;
+
+        const result = await Booking.findByIdAndUpdate(
+            payload.bookingId,
+            { totalCost },
+            { new: true, session },
+        )
+            .populate('user')
+            .populate('car');
+
+        await session.commitTransaction();
+        await session.endSession();
+
+        return result;
+    } catch (err) {
+        await session.abortTransaction();
+        await session.endSession();
+    }
 };
 
 export const CarServices = {
