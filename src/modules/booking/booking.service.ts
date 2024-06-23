@@ -15,24 +15,23 @@ const createBookingIntoDB = async (
 ) => {
     const session = await mongoose.startSession();
 
+    const user = await User.findById(userData.userId);
+    if (!user) {
+        throw new AppError(httpStatus.NOT_FOUND, 'User invalid');
+    }
+
+    payload.user = user._id;
+
+    const isCarAvailable = await Car.isCarAvailable(
+        payload.car as Types.ObjectId,
+    );
+
+    if (!isCarAvailable) {
+        throw new AppError(httpStatus.NOT_FOUND, 'Car is not available');
+    }
+
     try {
         session.startTransaction();
-
-        const user = await User.findById(userData.userId);
-        if (!user) {
-            throw new AppError(httpStatus.NOT_FOUND, 'User invalid');
-        }
-
-        payload.user = user._id;
-
-        const isCarAvailable = await Car.isCarAvailable(
-            payload.car as Types.ObjectId,
-        );
-
-        if (!isCarAvailable) {
-            throw new AppError(httpStatus.NOT_FOUND, 'Car is not available  ');
-        }
-
         const createdData = await Booking.create([payload], { session });
 
         // update car availability
@@ -44,12 +43,12 @@ const createBookingIntoDB = async (
             { session },
         );
 
+        await session.commitTransaction();
+        await session.endSession();
+
         const result = await Booking.findById(createdData[0]._id)
             .populate('user')
             .populate('car');
-
-        await session.commitTransaction();
-        await session.endSession();
 
         return result;
     } catch (err) {
