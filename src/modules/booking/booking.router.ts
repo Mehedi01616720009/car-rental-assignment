@@ -16,6 +16,6 @@ router.post(
 );
 
 // all bookings get route for only admin
-router.get('/');
+router.get('/', auth(USER_ROLE.admin), BookingController.getAllBookings);
 
 export const BookingRoutes = router;

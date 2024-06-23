@@ -4,6 +4,9 @@ import { Booking } from './booking.model';
 import { User } from '../user/user.model';
 import AppError from '../../errors/AppError';
 import httpStatus from 'http-status';
+import { Car } from '../car/car.model';
+import { bookingSearchableFields } from './booking.constant';
+import QueryBuilder from '../../builder/QueryBuilder';
 
 const createBookingIntoDB = async (
     userData: JwtPayload,
@@ -19,13 +22,26 @@ const createBookingIntoDB = async (
     const result = await Booking.findById(createdData._id)
         .populate('user')
         .populate('car');
+
+    // update car availability
+    await Car.findByIdAndUpdate(payload.car, {
+        status: 'unavailable',
+    });
+
     return result;
 };
 
-// const getAllCarFromDB = async () => {
-//     const result = await Car.find();
-//     return result;
-// };
+const getAllBookingsFromDB = async (query: Record<string, unknown>) => {
+    const fetch = new QueryBuilder(Booking.find(), query)
+        .search(bookingSearchableFields)
+        .filter()
+        .sort()
+        .paginate()
+        .fields();
+
+    const result = await fetch.modelQuery;
+    return result;
+};
 
 // const getSingleCarFromDB = async (id: string) => {
 //     const result = await Car.findById(id);
@@ -51,4 +67,5 @@ const createBookingIntoDB = async (
 
 export const BookingServices = {
     createBookingIntoDB,
+    getAllBookingsFromDB,
 };
