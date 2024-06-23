@@ -35,8 +35,10 @@ const signInUserIntoDB = async (payload: Partial<IUser>) => {
         expiresIn: '10d',
     });
 
+    const result = await User.findById(user._id);
+
     return {
-        user,
+        user: result,
         accessToken,
     };
 };

@@ -32,7 +32,15 @@ const createBookingIntoDB = async (
 };
 
 const getAllBookingsFromDB = async (query: Record<string, unknown>) => {
-    const fetch = new QueryBuilder(Booking.find(), query)
+    if (query?.carId) {
+        query.car = query?.carId;
+        delete query.carId;
+    }
+
+    const fetch = new QueryBuilder(
+        Booking.find().populate('user').populate('car'),
+        query,
+    )
         .search(bookingSearchableFields)
         .filter()
         .sort()
@@ -43,10 +51,16 @@ const getAllBookingsFromDB = async (query: Record<string, unknown>) => {
     return result;
 };
 
-// const getSingleCarFromDB = async (id: string) => {
-//     const result = await Car.findById(id);
-//     return result;
-// };
+const getMyBookingsFromDB = async (userData: JwtPayload) => {
+    const user = await User.findById(userData.userId).select('_id');
+    if (!user) {
+        throw new AppError(httpStatus.NOT_FOUND, 'User invalid');
+    }
+    const result = await Booking.find({ user: user._id })
+        .populate('user')
+        .populate('car');
+    return result;
+};
 
 // const updateCarIntoDB = async (id: string, payload: Partial<ICar>) => {
 //     const result = await Car.findByIdAndUpdate(id, payload, {
@@ -68,4 +82,5 @@ const getAllBookingsFromDB = async (query: Record<string, unknown>) => {
 export const BookingServices = {
     createBookingIntoDB,
     getAllBookingsFromDB,
+    getMyBookingsFromDB,
 };

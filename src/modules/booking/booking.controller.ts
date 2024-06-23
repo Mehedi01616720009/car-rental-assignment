@@ -18,14 +18,7 @@ const createBooking = catchAsync(async (req, res) => {
 });
 
 const getAllBookings = catchAsync(async (req, res) => {
-    const { carId, date } = req.query;
-    const query = { car: carId, date };
-    const result = await BookingServices.getAllBookingsFromDB(
-        query as {
-            car: string | undefined;
-            date: string | undefined;
-        },
-    );
+    const result = await BookingServices.getAllBookingsFromDB(req.query);
 
     sendResponse(res, {
         statusCode: httpStatus.OK,
@@ -35,7 +28,18 @@ const getAllBookings = catchAsync(async (req, res) => {
     });
 });
 
+const getMyBooking = catchAsync(async (req, res) => {
+    const result = await BookingServices.getMyBookingsFromDB(req.user);
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: 'My Bookings retrieved successfully',
+        data: result,
+    });
+});
+
 export const BookingController = {
     createBooking,
     getAllBookings,
+    getMyBooking,
 };
