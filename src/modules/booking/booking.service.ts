@@ -9,6 +9,7 @@ import { bookingSearchableFields } from './booking.constant';
 import QueryBuilder from '../../builder/QueryBuilder';
 import mongoose, { Types } from 'mongoose';
 
+// create a booking
 const createBookingIntoDB = async (
     userData: JwtPayload,
     payload: Partial<IBooking>,
@@ -57,6 +58,7 @@ const createBookingIntoDB = async (
     }
 };
 
+// get all bookings
 const getAllBookingsFromDB = async (query: Record<string, unknown>) => {
     if (query?.carId) {
         query.car = query?.carId;
@@ -77,6 +79,7 @@ const getAllBookingsFromDB = async (query: Record<string, unknown>) => {
     return result;
 };
 
+// get my bookings
 const getMyBookingsFromDB = async (userData: JwtPayload) => {
     const user = await User.findById(userData.userId).select('_id');
     if (!user) {

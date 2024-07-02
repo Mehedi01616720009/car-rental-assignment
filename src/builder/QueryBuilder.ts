@@ -9,6 +9,7 @@ class QueryBuilder<T> {
         this.query = query;
     }
 
+    // searchable query
     search(searchableFields: string[]) {
         const searchTerm = this?.query?.searchTerm;
         if (searchTerm) {
@@ -25,6 +26,7 @@ class QueryBuilder<T> {
         return this;
     }
 
+    // filter query
     filter() {
         const queryObj = { ...this?.query };
         const excludeTerms = ['searchTerm', 'sort', 'page', 'limit', 'fields'];
@@ -34,6 +36,7 @@ class QueryBuilder<T> {
         return this;
     }
 
+    // sorting
     sort() {
         const sort = (this?.query?.sort as string)
             ? (this?.query?.sort as string).split(',').join(' ')
@@ -42,6 +45,7 @@ class QueryBuilder<T> {
         return this;
     }
 
+    // paginate
     paginate() {
         const page = Number(this?.query?.page) || 1;
         const limit = Number(this?.query?.page) || 10;
@@ -51,6 +55,7 @@ class QueryBuilder<T> {
         return this;
     }
 
+    // filter fields projection
     fields() {
         const fields = (this?.query?.fields as string)
             ? (this?.query?.fields as string).split(',').join(' ')

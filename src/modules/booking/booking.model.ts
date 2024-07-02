@@ -1,6 +1,7 @@
 import mongoose, { Schema, model } from 'mongoose';
 import { IBooking } from './booking.interface';
 
+// booking schema
 const bookingSchema = new Schema<IBooking>(
     {
         date: {
@@ -34,4 +35,5 @@ const bookingSchema = new Schema<IBooking>(
     },
 );
 
+// booking model
 export const Booking = model<IBooking>('Booking', bookingSchema);

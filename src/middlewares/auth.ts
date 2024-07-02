@@ -6,14 +6,12 @@ import jwt, { JwtPayload } from 'jsonwebtoken';
 import config from '../config';
 import { TUserRole } from '../modules/user/user.interface';
 
-interface CustomRequest extends Request {
-    user: JwtPayload;
-}
-
 const auth = (...requiredRole: TUserRole[]) => {
     return catchAsync(
         async (req: Request, res: Response, next: NextFunction) => {
             const bearerToken = req.headers.authorization;
+
+            // take only token from 'Bearer token'
             const accessToken = bearerToken?.split(' ')[1];
             if (!accessToken) {
                 throw new AppError(
@@ -22,6 +20,7 @@ const auth = (...requiredRole: TUserRole[]) => {
                 );
             }
 
+            // token verify
             jwt.verify(
                 accessToken,
                 config.accessSecret as string,
@@ -42,6 +41,7 @@ const auth = (...requiredRole: TUserRole[]) => {
                         );
                     }
 
+                    // set user in request
                     req.user = decoded as JwtPayload;
                     next();
                 },

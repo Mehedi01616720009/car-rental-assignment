@@ -1,6 +1,7 @@
 import { Model } from 'mongoose';
 import { USER_ROLE } from './user.constant';
 
+// user interface
 export interface IUser {
     name: string;
     email: string;
@@ -10,10 +11,12 @@ export interface IUser {
     address: string;
 }
 
+// loggoed user interface
 export interface ILoggedUser extends IUser {
     _id: string;
 }
 
+// user static model interface
 export interface IUserModel extends Model<IUser> {
     isUserExistById(id: string): Promise<ILoggedUser | null>;
     isUserExistByEmail(email: string): Promise<ILoggedUser | null>;

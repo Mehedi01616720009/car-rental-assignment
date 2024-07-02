@@ -1,5 +1,6 @@
 import { Model, Types } from 'mongoose';
 
+// car interface
 export interface ICar {
     name: string;
     description: string;
@@ -11,6 +12,7 @@ export interface ICar {
     isDeleted: boolean;
 }
 
+// car static model interface
 export interface ICarModel extends Model<ICar> {
     isCarAvailable(id: Types.ObjectId): Promise<{ status: string }>;
 }

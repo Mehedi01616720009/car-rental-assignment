@@ -3,12 +3,16 @@ import cors from 'cors';
 import globalErrorHandler from '../middlewares/globalErrorHandler';
 import notFound from '../middlewares/notFound';
 import router from '../routes';
+import cookieParser from 'cookie-parser';
 
 // initialize express application
 const app: Application = express();
 
 // cross origin resources
 app.use(cors());
+
+// cookie parser
+app.use(cookieParser());
 
 // express parser
 app.use(express.json());

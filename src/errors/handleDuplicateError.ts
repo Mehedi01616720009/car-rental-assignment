@@ -1,3 +1,4 @@
+import httpStatus from 'http-status';
 import { TErrorResponse, TErrorMessages } from '../interface/error';
 
 const handleDuplicateError = (err: any): TErrorResponse => {
@@ -9,7 +10,7 @@ const handleDuplicateError = (err: any): TErrorResponse => {
             message: `${extractMessage} is already exist`,
         },
     ];
-    const statusCode = 400;
+    const statusCode = httpStatus.BAD_REQUEST;
     return {
         statusCode,
         message: 'Invalid ID',

@@ -3,6 +3,7 @@ import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
 import { BookingServices } from './booking.service';
 
+// create booking controller
 const createBooking = catchAsync(async (req, res) => {
     const result = await BookingServices.createBookingIntoDB(req.user, {
         car: req.body.carId,
@@ -17,6 +18,7 @@ const createBooking = catchAsync(async (req, res) => {
     });
 });
 
+// get all bookings controller
 const getAllBookings = catchAsync(async (req, res) => {
     const result = await BookingServices.getAllBookingsFromDB(req.query);
 
@@ -28,6 +30,7 @@ const getAllBookings = catchAsync(async (req, res) => {
     });
 });
 
+// get my bookings controller
 const getMyBooking = catchAsync(async (req, res) => {
     const result = await BookingServices.getMyBookingsFromDB(req.user);
     sendResponse(res, {

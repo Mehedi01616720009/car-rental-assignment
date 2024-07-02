@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+// set booking validation
 const bookingSetValidationSchema = z.object({
     body: z.object({
         date: z.string({
@@ -14,6 +15,7 @@ const bookingSetValidationSchema = z.object({
     }),
 });
 
+// end booking validation
 const bookingEndValidationSchema = z.object({
     body: z.object({
         bookingId: z.string({

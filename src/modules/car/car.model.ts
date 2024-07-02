@@ -4,6 +4,7 @@ import { carStatus } from './car.constant';
 import AppError from '../../errors/AppError';
 import httpStatus from 'http-status';
 
+// car schema
 const carSchema = new Schema<ICar>(
     {
         name: {
@@ -45,6 +46,7 @@ const carSchema = new Schema<ICar>(
     },
 );
 
+// car pre hook for findOneAndUpdate
 carSchema.pre('findOneAndUpdate', async function (next) {
     const query = this.getQuery();
     const isCarExist = await Car.findOne(query);
@@ -55,6 +57,7 @@ carSchema.pre('findOneAndUpdate', async function (next) {
     next();
 });
 
+// car model static function (isCarAvailable)
 carSchema.statics.isCarAvailable = async function (id: string) {
     return await Car.findOne({
         _id: id,
@@ -62,4 +65,5 @@ carSchema.statics.isCarAvailable = async function (id: string) {
     }).select('status');
 };
 
+// car model
 export const Car = model<ICar, ICarModel>('Car', carSchema);

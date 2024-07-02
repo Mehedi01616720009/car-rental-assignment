@@ -3,12 +3,15 @@ import app from './app';
 import mongoose from 'mongoose';
 import config from '../config';
 
+// server initialization
 let server: Server;
 
 async function main() {
     try {
+        // database connection
         await mongoose.connect(config.databaseUrl as string);
 
+        // server initial port listener
         server = app.listen(config.port, () => {
             console.log({ message: `Server is listening on ${config.port}` });
         });
@@ -27,6 +30,7 @@ async function main() {
 
 main();
 
+// server unhandled rejection listener
 process.on('unhandledRejection', () => {
     console.log({ message: '--| Unhandled Rejection Detected |--' });
 
@@ -38,6 +42,7 @@ process.on('unhandledRejection', () => {
     process.exit(1);
 });
 
+// server uncaught exception listener
 process.on('uncaughtException', () => {
     console.log({ message: '--| Uncaught Exception Detected |--' });
     process.exit(1);

@@ -5,21 +5,25 @@ import { Car } from './car.model';
 import AppError from '../../errors/AppError';
 import httpStatus from 'http-status';
 
+// create a car
 const createCarIntoDB = async (payload: ICar) => {
     const result = await Car.create(payload);
     return result;
 };
 
+// get all cars
 const getAllCarFromDB = async () => {
     const result = await Car.find();
     return result;
 };
 
+// get a car
 const getSingleCarFromDB = async (id: string) => {
     const result = await Car.findById(id);
     return result;
 };
 
+// update a car
 const updateCarIntoDB = async (id: string, payload: Partial<ICar>) => {
     const result = await Car.findByIdAndUpdate(id, payload, {
         new: true,
@@ -28,6 +32,7 @@ const updateCarIntoDB = async (id: string, payload: Partial<ICar>) => {
     return result;
 };
 
+// soft delete a car
 const deleteCarFromDB = async (id: string) => {
     const result = await Car.findByIdAndUpdate(
         id,
@@ -37,6 +42,7 @@ const deleteCarFromDB = async (id: string) => {
     return result;
 };
 
+// return car from user
 const returnCarFromUserIntoDB = async (payload: {
     bookingId: string;
     endTime: string;

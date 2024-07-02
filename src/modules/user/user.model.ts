@@ -5,6 +5,7 @@ import httpStatus from 'http-status';
 import bcrypt from 'bcrypt';
 import config from '../../config';
 
+// user schema
 const userSchema = new Schema<IUser>(
     {
         name: {
@@ -39,6 +40,7 @@ const userSchema = new Schema<IUser>(
     },
 );
 
+// user pre hook for create / save
 userSchema.pre('save', async function (next) {
     // check email duplicate
     const isUserExist = await User.findOne({ email: this?.email });
@@ -56,14 +58,17 @@ userSchema.pre('save', async function (next) {
     next();
 });
 
+// user model static function (isUserExistById)
 userSchema.statics.isUserExistById = async function (id: string) {
     return await User.findById(id);
 };
 
+// user model static function (isUserExistByEmail)
 userSchema.statics.isUserExistByEmail = async function (email: string) {
     return await User.findOne({ email }).select('+password');
 };
 
+// user model static function (isPasswordMatched)
 userSchema.statics.isPasswordMatched = async function (
     plainPassword: string,
     hashedPassword: string,
@@ -71,4 +76,5 @@ userSchema.statics.isPasswordMatched = async function (
     return await bcrypt.compare(plainPassword, hashedPassword);
 };
 
+// user model
 export const User = model<IUser, IUserModel>('User', userSchema);

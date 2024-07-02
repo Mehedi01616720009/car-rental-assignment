@@ -7,6 +7,7 @@ import handleValidationError from '../errors/handleValidationError';
 import handleCastError from '../errors/handleCastError';
 import handleDuplicateError from '../errors/handleDuplicateError';
 import AppError from '../errors/AppError';
+import httpStatus from 'http-status';
 
 const globalErrorHandler = (
     err: any,
@@ -14,7 +15,7 @@ const globalErrorHandler = (
     res: Response,
     next: NextFunction,
 ) => {
-    let statusCode = 500;
+    let statusCode = httpStatus.INTERNAL_SERVER_ERROR as number;
     let message = 'Something went wrong';
 
     let errorMessages: TErrorMessages = [
@@ -24,6 +25,7 @@ const globalErrorHandler = (
         },
     ];
 
+    // handle zod, mongoose (validation, cast, 11000 - duplicate error), AppError and Error
     if (err instanceof ZodError) {
         const simplifiedError = handleZodError(err);
         statusCode = simplifiedError?.statusCode;

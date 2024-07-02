@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import { TErrorResponse, TErrorMessages } from '../interface/error';
+import httpStatus from 'http-status';
 
 const handleCastError = (err: mongoose.Error.CastError): TErrorResponse => {
     const errorMessages: TErrorMessages = [
@@ -8,7 +9,7 @@ const handleCastError = (err: mongoose.Error.CastError): TErrorResponse => {
             message: err.message,
         },
     ];
-    const statusCode = 400;
+    const statusCode = httpStatus.BAD_REQUEST;
     return {
         statusCode,
         message: 'Invalid ID',

@@ -17,17 +17,19 @@ router.post(
 );
 
 // all car get route
-router.get('/', auth(USER_ROLE.admin, USER_ROLE.user), CarController.getAllCar);
+// router.get('/', auth(USER_ROLE.admin, USER_ROLE.user), CarController.getAllCar);
+router.get('/', CarController.getAllCar);
 
 // single car create route
-router.get(
-    '/:id',
-    auth(USER_ROLE.admin, USER_ROLE.user),
-    CarController.getSingleCar,
-);
+// router.get(
+//     '/:id',
+//     auth(USER_ROLE.admin, USER_ROLE.user),
+//     CarController.getSingleCar,
+// );
+router.get('/:id', CarController.getSingleCar);
 
 // car update route
-router.patch(
+router.put(
     '/:id',
     auth(USER_ROLE.admin),
     validateRequest(CarValidations.updateCarValidationSchema),

@@ -3,6 +3,7 @@ import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
 import { CarServices } from './car.service';
 
+// create a car controller
 const createCar = catchAsync(async (req, res) => {
     const result = await CarServices.createCarIntoDB(req.body);
     sendResponse(res, {
@@ -13,6 +14,7 @@ const createCar = catchAsync(async (req, res) => {
     });
 });
 
+// get all cars controller
 const getAllCar = catchAsync(async (req, res) => {
     const result = await CarServices.getAllCarFromDB();
     sendResponse(res, {
@@ -23,6 +25,7 @@ const getAllCar = catchAsync(async (req, res) => {
     });
 });
 
+// get a car controller
 const getSingleCar = catchAsync(async (req, res) => {
     const { id } = req.params;
     const result = await CarServices.getSingleCarFromDB(id);
@@ -34,6 +37,7 @@ const getSingleCar = catchAsync(async (req, res) => {
     });
 });
 
+// update a car controller
 const updateCar = catchAsync(async (req, res) => {
     const { id } = req.params;
     const result = await CarServices.updateCarIntoDB(id, req.body);
@@ -45,6 +49,7 @@ const updateCar = catchAsync(async (req, res) => {
     });
 });
 
+// soft delete a car controller
 const deleteCar = catchAsync(async (req, res) => {
     const { id } = req.params;
     const result = await CarServices.deleteCarFromDB(id);
@@ -56,6 +61,7 @@ const deleteCar = catchAsync(async (req, res) => {
     });
 });
 
+// return car from user controller
 const returnCar = catchAsync(async (req, res) => {
     const result = await CarServices.returnCarFromUserIntoDB(req.body);
     sendResponse(res, {

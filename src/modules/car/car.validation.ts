@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { carStatus } from './car.constant';
 
+// create car validation
 const createCarValidationSchema = z.object({
     body: z.object({
         name: z.string({
@@ -29,6 +30,7 @@ const createCarValidationSchema = z.object({
     }),
 });
 
+// update car validation
 const updateCarValidationSchema = z.object({
     body: z.object({
         name: z.string().optional(),
