@@ -17,16 +17,22 @@ router.post(
 );
 
 // all car get route
-// router.get('/', auth(USER_ROLE.admin, USER_ROLE.user), CarController.getAllCar);
-router.get('/', CarController.getAllCar);
+router.get('/', auth(USER_ROLE.admin, USER_ROLE.user), CarController.getAllCar);
 
 // single car create route
-// router.get(
-//     '/:id',
-//     auth(USER_ROLE.admin, USER_ROLE.user),
-//     CarController.getSingleCar,
-// );
-router.get('/:id', CarController.getSingleCar);
+router.get(
+    '/:id',
+    auth(USER_ROLE.admin, USER_ROLE.user),
+    CarController.getSingleCar,
+);
+
+// return car from user route for only admin
+router.put(
+    '/return',
+    auth(USER_ROLE.admin),
+    validateRequest(BookingValidations.bookingEndValidationSchema),
+    CarController.returnCar,
+);
 
 // car update route
 router.put(
@@ -38,13 +44,5 @@ router.put(
 
 // single car soft delete route
 router.delete('/:id', auth(USER_ROLE.admin), CarController.deleteCar);
-
-// return car from user route for only admin
-router.put(
-    '/return',
-    auth(USER_ROLE.admin),
-    validateRequest(BookingValidations.bookingEndValidationSchema),
-    CarController.returnCar,
-);
 
 export const CarRoutes = router;
