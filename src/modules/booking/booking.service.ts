@@ -65,7 +65,7 @@ const getAllBookingsFromDB = async (query: Record<string, unknown>) => {
         delete query.carId;
     }
 
-    const fetch = new QueryBuilder(
+    const fetchQuery = new QueryBuilder(
         Booking.find().populate('user').populate('car'),
         query,
     )
@@ -75,8 +75,9 @@ const getAllBookingsFromDB = async (query: Record<string, unknown>) => {
         .paginate()
         .fields();
 
-    const result = await fetch.modelQuery;
-    return result;
+    const result = await fetchQuery.modelQuery;
+    const meta = await fetchQuery.countTotal();
+    return { meta, result };
 };
 
 // get my bookings

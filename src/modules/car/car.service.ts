@@ -4,6 +4,8 @@ import { ICar } from './car.interface';
 import { Car } from './car.model';
 import AppError from '../../errors/AppError';
 import httpStatus from 'http-status';
+import QueryBuilder from '../../builder/QueryBuilder';
+import { carSearchableFields } from './car.constant';
 
 // create a car
 const createCarIntoDB = async (payload: ICar) => {
@@ -12,9 +14,17 @@ const createCarIntoDB = async (payload: ICar) => {
 };
 
 // get all cars
-const getAllCarFromDB = async () => {
-    const result = await Car.find();
-    return result;
+const getAllCarFromDB = async (query: Record<string, unknown>) => {
+    const fetchQuery = new QueryBuilder(Car.find(), query)
+        .search(carSearchableFields)
+        .filter()
+        .sort()
+        .paginate()
+        .fields();
+
+    const result = await fetchQuery.modelQuery;
+    const meta = await fetchQuery.countTotal();
+    return { meta, result };
 };
 
 // get a car
