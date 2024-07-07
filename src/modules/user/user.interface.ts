@@ -5,7 +5,7 @@ import { USER_ROLE } from './user.constant';
 export interface IUser {
     name: string;
     email: string;
-    role: 'admin' | 'user';
+    role: 'super-admin' | 'admin' | 'user';
     password: string;
     phone: string;
     address: string;

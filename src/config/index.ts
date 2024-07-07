@@ -12,4 +12,6 @@ export default {
     accessSecret: process.env.ACCESS_TOKEN_SECRET,
     refreshSecret: process.env.REFRESH_TOKEN_SECRET,
     bcryptSaltRounds: process.env.BCRYPT_SALT_ROUNDS,
+    superAdminPassword: process.env.SUPER_ADMIN_PASSWORD,
+    superAdminLimit: process.env.SUPER_ADMIN_LIMIT,
 };
