@@ -22,7 +22,11 @@ router.post(
 );
 
 // get me route
-router.get('/me', auth(USER_ROLE.admin, USER_ROLE.user), UserController.getMe);
+router.get(
+    '/me',
+    auth(USER_ROLE.superAdmin, USER_ROLE.admin, USER_ROLE.user),
+    UserController.getMe,
+);
 
 // get new access token by refresh token route
 router.get(

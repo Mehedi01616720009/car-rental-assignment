@@ -11,25 +11,29 @@ const router = express.Router();
 // car create route
 router.post(
     '/',
-    auth(USER_ROLE.admin),
+    auth(USER_ROLE.superAdmin, USER_ROLE.admin),
     validateRequest(CarValidations.createCarValidationSchema),
     CarController.createCar,
 );
 
 // all car get route
-router.get('/', auth(USER_ROLE.admin, USER_ROLE.user), CarController.getAllCar);
+router.get(
+    '/',
+    auth(USER_ROLE.superAdmin, USER_ROLE.admin, USER_ROLE.user),
+    CarController.getAllCar,
+);
 
 // single car create route
 router.get(
     '/:id',
-    auth(USER_ROLE.admin, USER_ROLE.user),
+    auth(USER_ROLE.superAdmin, USER_ROLE.admin, USER_ROLE.user),
     CarController.getSingleCar,
 );
 
 // return car from user route for only admin
 router.put(
     '/return',
-    auth(USER_ROLE.admin),
+    auth(USER_ROLE.superAdmin, USER_ROLE.admin),
     validateRequest(BookingValidations.bookingEndValidationSchema),
     CarController.returnCar,
 );
@@ -37,12 +41,16 @@ router.put(
 // car update route
 router.put(
     '/:id',
-    auth(USER_ROLE.admin),
+    auth(USER_ROLE.superAdmin, USER_ROLE.admin),
     validateRequest(CarValidations.updateCarValidationSchema),
     CarController.updateCar,
 );
 
 // single car soft delete route
-router.delete('/:id', auth(USER_ROLE.admin), CarController.deleteCar);
+router.delete(
+    '/:id',
+    auth(USER_ROLE.superAdmin, USER_ROLE.admin),
+    CarController.deleteCar,
+);
 
 export const CarRoutes = router;

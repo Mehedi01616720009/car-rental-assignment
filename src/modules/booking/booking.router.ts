@@ -16,7 +16,11 @@ router.post(
 );
 
 // all bookings get route for only admin
-router.get('/', auth(USER_ROLE.admin), BookingController.getAllBookings);
+router.get(
+    '/',
+    auth(USER_ROLE.superAdmin, USER_ROLE.admin),
+    BookingController.getAllBookings,
+);
 
 // my bookings get route for only user
 router.get(
