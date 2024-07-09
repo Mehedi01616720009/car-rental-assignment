@@ -56,9 +56,21 @@ const getNewAccessToken = catchAsync(async (req, res) => {
     });
 });
 
+// forget password controller
+const forgetPassword = catchAsync(async (req, res) => {
+    const result = await UserServices.forgetPasswordLinkGenerate(req.body);
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: 'Reset link generated successfully',
+        data: result,
+    });
+});
+
 export const UserController = {
     signUpUser,
     signInUser,
     getMe,
     getNewAccessToken,
+    forgetPassword,
 };

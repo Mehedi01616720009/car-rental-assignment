@@ -35,4 +35,11 @@ router.get(
     UserController.getNewAccessToken,
 );
 
+// forget password route
+router.get(
+    '/forget-password',
+    validateRequest(UserValidations.forgetPasswordValidationSchema),
+    UserController.forgetPassword,
+);
+
 export const UserRoutes = router;

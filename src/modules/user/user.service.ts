@@ -86,9 +86,34 @@ const getNewAccessTokenByRefreshToken = async (token: string) => {
     return { accessToken };
 };
 
+// user get me only
+const forgetPasswordLinkGenerate = async (payload: { email: string }) => {
+    // check user
+    const user = await User.isUserExistByEmail(payload.email);
+    if (!user) {
+        throw new AppError(httpStatus.NOT_FOUND, 'No user exist');
+    }
+
+    const jwtPayload = {
+        userId: user._id,
+        role: user.role,
+    };
+
+    // create access token for reset password
+    const accessToken = createToken(
+        jwtPayload,
+        config.accessSecret as string,
+        '10m',
+    );
+
+    const resetLink = `${config.frontendBaseUrl}/reset-password?token=${accessToken}`;
+    // return result;
+};
+
 export const UserServices = {
     signUpUserIntoDB,
     signInUserFromDB,
     getMeFromDB,
     getNewAccessTokenByRefreshToken,
+    forgetPasswordLinkGenerate,
 };

@@ -14,4 +14,5 @@ export default {
     bcryptSaltRounds: process.env.BCRYPT_SALT_ROUNDS,
     superAdminPassword: process.env.SUPER_ADMIN_PASSWORD,
     superAdminLimit: process.env.SUPER_ADMIN_LIMIT,
+    frontendBaseUrl: process.env.FRONTEND_BASE_URL,
 };

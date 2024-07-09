@@ -45,8 +45,18 @@ const refreshTokenValidationSchema = z.object({
     }),
 });
 
+// user refresh token validation
+const forgetPasswordValidationSchema = z.object({
+    body: z.object({
+        email: z.string({
+            required_error: 'Email is required',
+        }),
+    }),
+});
+
 export const UserValidations = {
     userSignUpValidationSchema,
     userSignInValidationSchema,
     refreshTokenValidationSchema,
+    forgetPasswordValidationSchema,
 };
