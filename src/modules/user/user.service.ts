@@ -107,7 +107,7 @@ const forgetPasswordLinkGenerate = async (payload: { email: string }) => {
     );
 
     const resetLink = `${config.frontendBaseUrl}/reset-password?token=${accessToken}`;
-    // return result;
+    return resetLink;
 };
 
 export const UserServices = {
