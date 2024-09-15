@@ -1,4 +1,4 @@
-import jwt, { JwtPayload } from 'jsonwebtoken';
+import { JwtPayload } from 'jsonwebtoken';
 import { IUser } from './user.interface';
 import { User } from './user.model';
 import AppError from '../../errors/AppError';
