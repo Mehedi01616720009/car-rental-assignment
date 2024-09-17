@@ -11,6 +11,8 @@ export default {
     databaseUrl: process.env.DATABASE_URL,
     accessSecret: process.env.ACCESS_TOKEN_SECRET,
     refreshSecret: process.env.REFRESH_TOKEN_SECRET,
+    accessExpTime: process.env.ACCESS_TOKEN_EXP,
+    refreshExpTime: process.env.REFRESH_TOKEN_EXP,
     bcryptSaltRounds: process.env.BCRYPT_SALT_ROUNDS,
     superAdminPassword: process.env.SUPER_ADMIN_PASSWORD,
     superAdminLimit: process.env.SUPER_ADMIN_LIMIT,

@@ -38,13 +38,13 @@ const signInUserFromDB = async (payload: Partial<IUser>) => {
     const accessToken = createToken(
         jwtPayload,
         config.accessSecret as string,
-        '15d',
+        config.accessExpTime as string,
     );
 
     const refreshToken = createToken(
         jwtPayload,
         config.refreshSecret as string,
-        '365d',
+        config.refreshExpTime as string,
     );
 
     const result = await User.findById(user._id);
@@ -80,7 +80,7 @@ const getNewAccessTokenByRefreshToken = async (token: string) => {
     const accessToken = createToken(
         jwtPayload,
         config.accessSecret as string,
-        '15d',
+        config.accessExpTime as string,
     );
 
     return { accessToken };
