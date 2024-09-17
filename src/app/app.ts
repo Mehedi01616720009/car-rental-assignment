@@ -4,12 +4,13 @@ import globalErrorHandler from '../middlewares/globalErrorHandler';
 import notFound from '../middlewares/notFound';
 import router from '../routes';
 import cookieParser from 'cookie-parser';
+import config from '../config';
 
 // initialize express application
 const app: Application = express();
 
 // cross origin resources
-app.use(cors());
+app.use(cors({ origin: config.frontendBaseUrl, credentials: true }));
 
 // cookie parser
 app.use(cookieParser());
